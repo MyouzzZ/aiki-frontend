@@ -80,13 +80,21 @@ Copy the example environment file:
 cp .env.example .env.local
 ```
 
-Then update the values in `.env.local` as needed.
+The current example file contains one public browser variable:
+
+```env
+NEXT_PUBLIC_PROJECT_ID=
+```
+
+`NEXT_PUBLIC_PROJECT_ID` is used by `lib/wagmi-provider.tsx` to enable the WalletConnect/Reown connector. Add your WalletConnect or Reown project ID when you need to test QR-code wallet connection flows:
 
 ```env
 NEXT_PUBLIC_PROJECT_ID=your_walletconnect_or_reown_project_id
 ```
 
-> The app should still run without a WalletConnect/Reown project ID if the wallet provider is configured to fall back to MetaMask only.
+For non-wallet UI work, the app can still run without this value. When `NEXT_PUBLIC_PROJECT_ID` is empty, the wallet provider falls back to the MetaMask connector only.
+
+Restart `npm run dev` after changing `.env.local`, because Next.js reads public environment variables when the dev server starts.
 
 ### 4. Run the development server
 
@@ -100,37 +108,33 @@ Open the app in your browser:
 http://localhost:3000
 ```
 
+If port `3000` is already in use, follow the Next.js terminal prompt or stop the process using that port before retrying.
+
 ## Available Scripts
 
-Run the development server:
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the local Next.js development server. |
+| `npm run build` | Build the production version and catch build-time issues. |
+| `npm run start` | Start the production server after a successful build. |
+| `npm run lint` | Run ESLint across the project. |
+| `npm run type-check` | Run TypeScript validation with `tsc --noEmit`. |
 
-```bash
-npm run dev
-```
-
-Build the production version:
-
-```bash
-npm run build
-```
-
-Start the production server:
-
-```bash
-npm run start
-```
-
-Run lint checks:
+Before opening a pull request, run:
 
 ```bash
 npm run lint
-```
-
-Run TypeScript checks:
-
-```bash
 npm run type-check
+npm run build
 ```
+
+## Local Setup Troubleshooting
+
+- If dependencies fail to install, delete `node_modules`, keep `package-lock.json`, and run `npm install` again with the current Node.js LTS release.
+- If wallet QR-code connection is unavailable, confirm `NEXT_PUBLIC_PROJECT_ID` exists in `.env.local` and restart the dev server.
+- If you do not have a WalletConnect/Reown project ID, continue with MetaMask-only testing for non-wallet UI tasks.
+- If TypeScript path aliases fail, make sure imports use the configured `@/*` alias from `tsconfig.json` or valid relative paths.
+- If a check fails after a fresh clone, include the failing command and output in your pull request notes.
 
 ## Project Structure
 
